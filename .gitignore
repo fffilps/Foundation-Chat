@@ -1,0 +1,6 @@
+# Foundation Chat
+.DS_Store
+build/
+DerivedData/
+*.xcuserstate
+xcuserdata/

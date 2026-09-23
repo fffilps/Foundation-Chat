@@ -13,6 +13,7 @@
 		A10000000000000000000004 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000004 /* ContentView.swift */; };
 		A10000000000000000000005 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000005 /* Assets.xcassets */; };
 		A10000000000000000000006 /* SheetsAndHelp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000008 /* SheetsAndHelp.swift */; };
+		A10000000000000000000007 /* MarkdownContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000009 /* MarkdownContent.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +25,7 @@
 		A20000000000000000000006 /* FoundationChat.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = FoundationChat.entitlements; sourceTree = "<group>"; };
 		A20000000000000000000007 /* FoundationChat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FoundationChat.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A20000000000000000000008 /* SheetsAndHelp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SheetsAndHelp.swift; sourceTree = "<group>"; };
+		A20000000000000000000009 /* MarkdownContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkdownContent.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -70,6 +72,7 @@
 			isa = PBXGroup;
 			children = (
 				A20000000000000000000004 /* ContentView.swift */,
+				A20000000000000000000009 /* MarkdownContent.swift */,
 				A20000000000000000000008 /* SheetsAndHelp.swift */,
 			);
 			path = Views;
@@ -156,6 +159,7 @@
 				A10000000000000000000002 /* ChatStore.swift in Sources */,
 				A10000000000000000000003 /* ChatModels.swift in Sources */,
 				A10000000000000000000004 /* ContentView.swift in Sources */,
+				A10000000000000000000007 /* MarkdownContent.swift in Sources */,
 				A10000000000000000000006 /* SheetsAndHelp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -176,7 +176,8 @@ struct ChatConversation: Identifiable, Codable, Sendable, Equatable {
 
     static let defaultInstructions = """
     You are a helpful on-device assistant powered by Apple Foundation Models. \
-    Be clear, concise, and practical. Prefer short paragraphs and bullet lists when useful.
+    Be clear, concise, and practical. Prefer short paragraphs and bullet lists when useful. \
+    Format replies in Markdown (headings, bold, lists, and fenced code blocks) when it improves readability.
     """
 
     static let presets: [InstructionPreset] = [
@@ -201,7 +202,8 @@ struct ChatConversation: Identifiable, Codable, Sendable, Equatable {
             subtitle: "Practical engineering help",
             instructions: """
             You are a senior software engineer. Focus on correct, idiomatic code. \
-            Explain briefly, then provide code. Call out edge cases and tradeoffs.
+            Explain briefly, then provide code in fenced Markdown code blocks with a language tag. \
+            Call out edge cases and tradeoffs.
             """
         ),
         InstructionPreset(
@@ -346,7 +348,7 @@ enum HelpTopic: String, CaseIterable, Identifiable {
             """
             Foundation Chat is a Mac GUI for Apple’s on-device Foundation Models — the same SystemLanguageModel used by the `fm` CLI.
 
-            Use it to chat, rewrite, summarize, brainstorm, and get coding help without leaving a normal Mac app.
+            Use it to chat, rewrite, summarize, brainstorm, and get coding help without leaving a normal Mac app. Assistant replies that include Markdown are rendered in the chat bubble.
             """
         case .context:
             """
@@ -374,6 +376,7 @@ enum HelpTopic: String, CaseIterable, Identifiable {
             """
             • Be specific: paste the text you want changed
             • Use presets for coding, writing, or concise mode
+            • Model replies render as Markdown (bold, lists, headings, code blocks)
             • Copy any reply from the message menu
             • Export a chat when you want a Markdown transcript
             • If answers drift, start a new chat with fresh context

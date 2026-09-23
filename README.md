@@ -5,6 +5,7 @@ A native macOS chat app for Apple’s on-device **Foundation Models** — the sa
 ## Features
 
 - Streaming on-device chat (same `SystemLanguageModel` as `fm`)
+- **Markdown replies** — bold, lists, headings, and fenced code blocks render in the chat
 - **Context meter** with live token counts (`fm count-tokens` equivalent)
 - Instructions + presets (coding, writing, concise, teacher, tagger)
 - Generation options: temperature, max tokens, greedy sampling, use case, guardrails

@@ -5,10 +5,7 @@ A native macOS chat app for **local models**, starting with Apple’s on-device 
 ## Features
 
 - Streaming on-device chat (same `SystemLanguageModel` as `fm`)
-- **Local model catalog** with Apple Foundation Models live today
-- **Hardware fit checks** — chip, RAM, free disk, and Apple Intelligence readiness
-- Bundled **requirements sheet** (if/and rules) for fast “can this Mac run it?” answers
-- Provider hooks stubbed for **Ollama**, **Hugging Face**, and **Unsloth** (coming later)
+- **Markdown replies** — bold, lists, headings, and fenced code blocks render in the chat
 - **Context meter** with live token counts (`fm count-tokens` equivalent)
 - Instructions + presets (coding, writing, concise, teacher, tagger)
 - Generation options: temperature, max tokens, greedy sampling, use case, guardrails

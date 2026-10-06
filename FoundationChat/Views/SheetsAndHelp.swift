@@ -91,24 +91,28 @@ struct ChatOptionsSheet: View {
             .padding(.bottom, 0)
 
             Form {
-                Section("Model use case") {
-                    Picker("Use case", selection: useCaseBinding) {
-                        ForEach(ModelUseCaseOption.allCases) { option in
-                            Text(option.title).tag(option)
-                        }
-                    }
-                    Text(store.settings.useCase.detail)
-                        .foregroundStyle(.secondary)
-                }
+                ModelCatalogSection()
 
-                Section("Guardrails") {
-                    Picker("Guardrails", selection: guardrailsBinding) {
-                        ForEach(GuardrailOption.allCases) { option in
-                            Text(option.title).tag(option)
+                if store.showsAppleControls {
+                    Section("Model use case") {
+                        Picker("Use case", selection: useCaseBinding) {
+                            ForEach(ModelUseCaseOption.allCases) { option in
+                                Text(option.title).tag(option)
+                            }
                         }
+                        Text(store.settings.useCase.detail)
+                            .foregroundStyle(.secondary)
                     }
-                    Text(store.settings.guardrails.detail)
-                        .foregroundStyle(.secondary)
+
+                    Section("Guardrails") {
+                        Picker("Guardrails", selection: guardrailsBinding) {
+                            ForEach(GuardrailOption.allCases) { option in
+                                Text(option.title).tag(option)
+                            }
+                        }
+                        Text(store.settings.guardrails.detail)
+                            .foregroundStyle(.secondary)
+                    }
                 }
 
                 Section("Sampling") {
@@ -158,7 +162,7 @@ struct ChatOptionsSheet: View {
             }
             .padding(24)
         }
-        .frame(width: 520, height: 620)
+        .frame(width: 520, height: 720)
     }
 
     private var useCaseBinding: Binding<ModelUseCaseOption> {
@@ -285,10 +289,11 @@ struct HelpSheet: View {
                     if store.helpTopic == .overview {
                         GroupBox("Quick status") {
                             VStack(alignment: .leading, spacing: 8) {
-                                LabeledContent("Model", value: store.availability.title)
+                                LabeledContent("Selected", value: store.activeModelDisplayName)
+                                LabeledContent("Status", value: store.availability.title)
+                                LabeledContent("Fit", value: store.selectedFit.summary)
                                 LabeledContent("Context window", value: "\(store.contextUsage.contextSize) tokens")
                                 LabeledContent("Used", value: store.contextUsage.statusLabel)
-                                LabeledContent("Use case", value: store.settings.useCase.title)
                             }
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .padding(4)
@@ -325,13 +330,29 @@ struct SettingsView: View {
     var body: some View {
         TabView {
             Form {
-                Section("Model") {
+                Section("Selected model") {
+                    LabeledContent("Model", value: store.activeModelDisplayName)
+                    LabeledContent("Provider", value: store.selectedModelDescriptor.providerTitle)
                     LabeledContent("Status", value: store.availability.title)
                     Text(store.availability.detail)
                         .foregroundStyle(.secondary)
+                    LabeledContent("Fit", value: store.selectedFit.summary)
+                    Text(store.selectedFit.detail)
+                        .foregroundStyle(.secondary)
                     Button("Refresh Availability") {
-                        store.refreshAvailability()
+                        store.refreshMachineProfile()
                     }
+                }
+
+                Section("This Mac") {
+                    LabeledContent("Machine", value: store.machineProfile.machineModel)
+                    LabeledContent("Chip", value: store.machineProfile.chipDescription)
+                    LabeledContent("Memory", value: store.machineProfile.memoryLabel)
+                    LabeledContent("Free disk", value: store.machineProfile.freeDiskLabel)
+                    Text("Models cache: \(store.machineProfile.modelsDirectoryPath)")
+                        .font(.caption)
+                        .foregroundStyle(.tertiary)
+                        .textSelection(.enabled)
                 }
 
                 Section("Context") {
@@ -355,9 +376,10 @@ struct SettingsView: View {
 
             Form {
                 Section("About") {
-                    LabeledContent("Engine", value: "Apple Foundation Models")
-                    LabeledContent("Privacy", value: "On-device")
-                    Text("Same SystemLanguageModel as the `fm` CLI, with a Mac chat interface, context meter, instructions, and generation controls.")
+                    LabeledContent("Engine", value: store.activeModelDisplayName)
+                    LabeledContent("Catalog", value: "Local models + future providers")
+                    LabeledContent("Privacy", value: "On-device / local-only")
+                    Text("Apple Foundation Models are live today. Ollama, Hugging Face, and Unsloth are stubbed for later local plug-ins.")
                         .foregroundStyle(.secondary)
                     Button("Open Help") { store.openHelp() }
                 }
@@ -369,28 +391,89 @@ struct SettingsView: View {
     }
 }
 
+struct ModelCatalogSection: View {
+    @EnvironmentObject private var store: ChatStore
+
+    var body: some View {
+        Section("Models") {
+            Picker("Model", selection: modelBinding) {
+                ForEach(LocalModelCatalog.all) { model in
+                    Text(model.displayName).tag(model.id)
+                }
+            }
+            HStack(spacing: 8) {
+                Text(store.selectedModelDescriptor.providerTitle)
+                    .font(.caption.weight(.semibold))
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 3)
+                    .background(Color.secondary.opacity(0.12), in: Capsule())
+                FitBadge(fit: store.selectedFit)
+            }
+            Text(store.selectedFit.detail)
+                .foregroundStyle(.secondary)
+            if !store.selectedModelDescriptor.notes.isEmpty {
+                Text(store.selectedModelDescriptor.notes)
+                    .font(.caption)
+                    .foregroundStyle(.tertiary)
+            }
+        }
+    }
+
+    private var modelBinding: Binding<String> {
+        Binding(
+            get: { store.settings.selectedModelID },
+            set: { store.selectModel(id: $0) }
+        )
+    }
+}
+
+struct FitBadge: View {
+    let fit: FitResult
+
+    var body: some View {
+        Text(fit.verdict.badgeTitle)
+            .font(.caption.weight(.semibold))
+            .padding(.horizontal, 8)
+            .padding(.vertical, 3)
+            .foregroundStyle(foreground)
+            .background(foreground.opacity(0.12), in: Capsule())
+    }
+
+    private var foreground: Color {
+        switch fit.verdict {
+        case .runnable: .green
+        case .tight: .orange
+        case .needsRAM, .needsDisk, .unsupported: .red
+        case .comingSoon: .secondary
+        }
+    }
+}
+
 private struct ChatOptionsEmbedded: View {
     @EnvironmentObject private var store: ChatStore
 
     var body: some View {
         Form {
-            Section("Use case") {
-                Picker("Use case", selection: Binding(
-                    get: { store.settings.useCase },
-                    set: { value in store.updateSettings { $0.useCase = value } }
-                )) {
-                    ForEach(ModelUseCaseOption.allCases) { option in
-                        Text(option.title).tag(option)
+            ModelCatalogSection()
+            if store.showsAppleControls {
+                Section("Use case") {
+                    Picker("Use case", selection: Binding(
+                        get: { store.settings.useCase },
+                        set: { value in store.updateSettings { $0.useCase = value } }
+                    )) {
+                        ForEach(ModelUseCaseOption.allCases) { option in
+                            Text(option.title).tag(option)
+                        }
                     }
                 }
-            }
-            Section("Guardrails") {
-                Picker("Guardrails", selection: Binding(
-                    get: { store.settings.guardrails },
-                    set: { value in store.updateSettings { $0.guardrails = value } }
-                )) {
-                    ForEach(GuardrailOption.allCases) { option in
-                        Text(option.title).tag(option)
+                Section("Guardrails") {
+                    Picker("Guardrails", selection: Binding(
+                        get: { store.settings.guardrails },
+                        set: { value in store.updateSettings { $0.guardrails = value } }
+                    )) {
+                        ForEach(GuardrailOption.allCases) { option in
+                            Text(option.title).tag(option)
+                        }
                     }
                 }
             }

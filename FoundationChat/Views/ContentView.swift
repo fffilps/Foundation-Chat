@@ -207,11 +207,12 @@ struct EmptyChatHero: View {
                     .symbolRenderingMode(.hierarchical)
                 Text("Foundation Chat")
                     .font(.largeTitle.weight(.semibold))
-                Text("Talk to Apple’s on-device Foundation Model. Private, offline, no API key.")
+                Text("Talk to \(store.activeModelDisplayName). Private, local, no API key.")
                     .font(.title3)
                     .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)
                     .frame(maxWidth: 460)
+                FitBadge(fit: store.selectedFit)
 
                 LazyVGrid(columns: [GridItem(.adaptive(minimum: 140), spacing: 10)], spacing: 10) {
                     ForEach(PromptSuggestion.all) { suggestion in
@@ -290,7 +291,7 @@ struct MessageBubble: View {
 
             VStack(alignment: isUser ? .trailing : .leading, spacing: 6) {
                 HStack(spacing: 8) {
-                    Text(isUser ? "You" : "Foundation Model")
+                    Text(isUser ? "You" : store.activeModelDisplayName)
                         .font(.caption.weight(.semibold))
                         .foregroundStyle(.secondary)
                     if !message.text.isEmpty {
@@ -396,7 +397,15 @@ struct ComposerView: View {
             .padding(.bottom, 16)
             .padding(.top, 2)
 
-            if store.contextUsage.draftTokens > 0 {
+            if let reason = store.sendBlockedReason,
+               !store.draft.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                Text(reason)
+                    .font(.caption2)
+                    .foregroundStyle(.orange)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.horizontal, 24)
+                    .padding(.bottom, 4)
+            } else if store.contextUsage.draftTokens > 0 {
                 Text("Draft ≈ \(store.contextUsage.draftTokens) token\(store.contextUsage.draftTokens == 1 ? "" : "s")")
                     .font(.caption2)
                     .foregroundStyle(.tertiary)
@@ -413,17 +422,21 @@ struct ComposerView: View {
 struct AvailabilityBanner: View {
     @EnvironmentObject private var store: ChatStore
 
+    private var shouldShow: Bool {
+        !store.availability.isReady || !store.selectedFit.canAttemptChat
+    }
+
     var body: some View {
-        if !store.availability.isReady {
+        if shouldShow {
             HStack(alignment: .top, spacing: 12) {
                 Image(systemName: iconName)
                     .foregroundStyle(.orange)
                     .font(.title3)
 
                 VStack(alignment: .leading, spacing: 4) {
-                    Text(store.availability.title)
+                    Text(bannerTitle)
                         .font(.headline)
-                    Text(store.availability.detail)
+                    Text(bannerDetail)
                         .font(.callout)
                         .foregroundStyle(.secondary)
                         .fixedSize(horizontal: false, vertical: true)
@@ -446,11 +459,29 @@ struct AvailabilityBanner: View {
         }
     }
 
+    private var bannerTitle: String {
+        if !store.selectedFit.canAttemptChat {
+            return store.selectedFit.summary
+        }
+        return store.availability.title
+    }
+
+    private var bannerDetail: String {
+        if !store.selectedFit.canAttemptChat {
+            return store.selectedFit.detail
+        }
+        return store.availability.detail
+    }
+
     private var iconName: String {
+        if store.selectedFit.verdict == .comingSoon {
+            return "clock.badge.questionmark"
+        }
         switch store.availability {
         case .appleIntelligenceNotEnabled: "switch.2"
         case .modelNotReady: "arrow.down.circle"
         case .deviceNotEligible: "laptopcomputer.trianglebadge.exclamationmark"
+        case .providerComingSoon: "clock.badge.questionmark"
         default: "exclamationmark.triangle"
         }
     }

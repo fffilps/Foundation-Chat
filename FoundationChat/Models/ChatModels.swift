@@ -75,6 +75,7 @@ enum GuardrailOption: String, Codable, CaseIterable, Identifiable, Sendable {
 }
 
 struct GenerationSettings: Codable, Equatable, Sendable {
+    var selectedModelID: String = LocalModelCatalog.appleGeneralID
     var useCase: ModelUseCaseOption = .general
     var guardrails: GuardrailOption = .standard
     var temperature: Double = 0.7
@@ -86,6 +87,68 @@ struct GenerationSettings: Codable, Equatable, Sendable {
     var warnNearContextLimit: Bool = true
 
     static let `default` = GenerationSettings()
+
+    enum CodingKeys: String, CodingKey {
+        case selectedModelID
+        case useCase
+        case guardrails
+        case temperature
+        case useCustomTemperature
+        case maximumResponseTokens
+        case limitResponseTokens
+        case greedySampling
+        case showContextMeter
+        case warnNearContextLimit
+    }
+
+    init(
+        selectedModelID: String = LocalModelCatalog.appleGeneralID,
+        useCase: ModelUseCaseOption = .general,
+        guardrails: GuardrailOption = .standard,
+        temperature: Double = 0.7,
+        useCustomTemperature: Bool = false,
+        maximumResponseTokens: Int = 1024,
+        limitResponseTokens: Bool = false,
+        greedySampling: Bool = false,
+        showContextMeter: Bool = true,
+        warnNearContextLimit: Bool = true
+    ) {
+        self.selectedModelID = LocalModelCatalog.resolvedID(selectedModelID)
+        self.useCase = useCase
+        self.guardrails = guardrails
+        self.temperature = temperature
+        self.useCustomTemperature = useCustomTemperature
+        self.maximumResponseTokens = maximumResponseTokens
+        self.limitResponseTokens = limitResponseTokens
+        self.greedySampling = greedySampling
+        self.showContextMeter = showContextMeter
+        self.warnNearContextLimit = warnNearContextLimit
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        selectedModelID = LocalModelCatalog.resolvedID(
+            try container.decodeIfPresent(String.self, forKey: .selectedModelID)
+        )
+        useCase = try container.decodeIfPresent(ModelUseCaseOption.self, forKey: .useCase) ?? .general
+        guardrails = try container.decodeIfPresent(GuardrailOption.self, forKey: .guardrails) ?? .standard
+        temperature = try container.decodeIfPresent(Double.self, forKey: .temperature) ?? 0.7
+        useCustomTemperature = try container.decodeIfPresent(Bool.self, forKey: .useCustomTemperature) ?? false
+        maximumResponseTokens = try container.decodeIfPresent(Int.self, forKey: .maximumResponseTokens) ?? 1024
+        limitResponseTokens = try container.decodeIfPresent(Bool.self, forKey: .limitResponseTokens) ?? false
+        greedySampling = try container.decodeIfPresent(Bool.self, forKey: .greedySampling) ?? false
+        showContextMeter = try container.decodeIfPresent(Bool.self, forKey: .showContextMeter) ?? true
+        warnNearContextLimit = try container.decodeIfPresent(Bool.self, forKey: .warnNearContextLimit) ?? true
+
+        // Keep Apple model ID and use case aligned when loading older settings.
+        if let descriptor = LocalModelCatalog.descriptor(id: selectedModelID),
+           let appleUseCase = descriptor.appleUseCase {
+            useCase = appleUseCase
+        } else if selectedModelID == LocalModelCatalog.appleGeneralID
+            || selectedModelID == LocalModelCatalog.appleTaggingID {
+            selectedModelID = LocalModelCatalog.descriptor(forUseCase: useCase).id
+        }
+    }
 }
 
 struct InstructionPreset: Identifiable, Sendable {
@@ -159,14 +222,14 @@ struct ChatConversation: Identifiable, Codable, Sendable, Equatable {
         self.updatedAt = updatedAt
     }
 
-    var exportedTranscript: String {
+    func exportedTranscript(assistantName: String = "Assistant") -> String {
         var lines: [String] = ["# \(title)", ""]
         if !instructions.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             lines.append("Instructions: \(instructions)")
             lines.append("")
         }
         for message in messages where !message.text.isEmpty {
-            let speaker = message.role == .user ? "You" : "Foundation Model"
+            let speaker = message.role == .user ? "You" : assistantName
             lines.append("\(speaker):")
             lines.append(message.text)
             lines.append("")
@@ -268,6 +331,7 @@ enum ModelAvailabilityStatus: Equatable, Sendable {
     case deviceNotEligible
     case appleIntelligenceNotEnabled
     case modelNotReady
+    case providerComingSoon
     case unknown(String)
 
     var isReady: Bool {
@@ -284,6 +348,8 @@ enum ModelAvailabilityStatus: Equatable, Sendable {
             "Apple Intelligence is turned off"
         case .modelNotReady:
             "Model is still downloading"
+        case .providerComingSoon:
+            "Provider coming soon"
         case .unknown:
             "Model unavailable"
         }
@@ -299,6 +365,8 @@ enum ModelAvailabilityStatus: Equatable, Sendable {
             "Turn on Apple Intelligence in System Settings → Apple Intelligence & Siri."
         case .modelNotReady:
             "Apple is preparing the on-device model. Keep the Mac awake and connected until it finishes."
+        case .providerComingSoon:
+            "This provider is stubbed for a future local plug-in. Pick an Apple Foundation Model to chat now."
         case .unknown(let message):
             message
         }
@@ -344,9 +412,9 @@ enum HelpTopic: String, CaseIterable, Identifiable {
         switch self {
         case .overview:
             """
-            Foundation Chat is a Mac GUI for Apple’s on-device Foundation Models — the same SystemLanguageModel used by the `fm` CLI.
+            Foundation Chat is a Mac GUI for local models, starting with Apple’s on-device Foundation Models — the same SystemLanguageModel used by the `fm` CLI.
 
-            Use it to chat, rewrite, summarize, brainstorm, and get coding help without leaving a normal Mac app.
+            Use it to chat, rewrite, summarize, brainstorm, and get coding help without leaving a normal Mac app. The model catalog also reserves slots for Ollama, Hugging Face, and Unsloth.
             """
         case .context:
             """
@@ -364,10 +432,12 @@ enum HelpTopic: String, CaseIterable, Identifiable {
             """
             Generation options mirror what power users tweak in the CLI:
 
+            • Model — pick Apple Foundation Models now; Ollama / Hugging Face / Unsloth are stubbed for later
+            • Fit badge — uses this Mac’s RAM, free disk, and Apple Intelligence readiness
             • Temperature — higher is more varied, lower is more focused
             • Max tokens — caps how long a reply can be
             • Greedy sampling — more deterministic answers
-            • Use case — General chat or Content Tagging
+            • Use case — General chat or Content Tagging (Apple models)
             • Guardrails — Standard safety, or permissive transforms for rewriting your own text
             """
         case .tips:

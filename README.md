@@ -1,16 +1,20 @@
 # Foundation Chat
 
-A native macOS chat app for Apple’s on-device **Foundation Models** — the same engine behind the `fm` CLI, with a real Mac GUI.
+A native macOS chat app for **local models**, starting with Apple’s on-device **Foundation Models** — the same engine behind the `fm` CLI, with a real Mac GUI.
 
 ## Features
 
 - Streaming on-device chat (same `SystemLanguageModel` as `fm`)
+- **Local model catalog** with Apple Foundation Models live today
+- **Hardware fit checks** — chip, RAM, free disk, and Apple Intelligence readiness
+- Bundled **requirements sheet** (if/and rules) for fast “can this Mac run it?” answers
+- Provider hooks stubbed for **Ollama**, **Hugging Face**, and **Unsloth** (coming later)
 - **Context meter** with live token counts (`fm count-tokens` equivalent)
 - Instructions + presets (coding, writing, concise, teacher, tagger)
 - Generation options: temperature, max tokens, greedy sampling, use case, guardrails
 - Help guide with context / CLI / privacy topics
 - Export / copy transcripts, rename chats, prompt starters
-- Settings window for status + options
+- Settings window for status + machine profile + options
 
 ## Requirements
 
@@ -35,12 +39,25 @@ xcodebuild -scheme FoundationChat -configuration Debug -derivedDataPath build
 open "build/Build/Products/Debug/FoundationChat.app"
 ```
 
+## Local model catalog
+
+| Model | Provider | Phase 1 |
+|-------|----------|---------|
+| Apple Foundation Model — General | Apple Foundation | Live |
+| Apple Foundation Model — Content Tagging | Apple Foundation | Live |
+| Ollama | Ollama | Stub (coming soon) |
+| Hugging Face | Hugging Face | Stub (coming soon) |
+| Unsloth export | Unsloth | Stub (coming soon) |
+
+Fit badges use `FoundationChat/Resources/ModelRequirements.json`. After testing on real Macs, tighten the numbers there—no code changes required for threshold tweaks.
+
 ## If the model isn’t ready
 
 Your machine currently reports `modelNotReady` from `fm available`. That means the on-device model is still downloading or preparing. Keep the Mac awake, leave Apple Intelligence on, then tap **Check Again** in the app (or run `fm available`).
 
 ## Notes
 
-- All inference stays on device.
+- All inference stays local (on-device Apple FM today; future providers stay local too).
 - Chats are saved locally under Application Support (`FoundationChat/conversations.json`).
+- Future model caches use Application Support (`FoundationChat/Models`).
 - This uses the official `FoundationModels` Swift framework, not a wrapper around the CLI.

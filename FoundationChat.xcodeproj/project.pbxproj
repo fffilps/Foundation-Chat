@@ -13,6 +13,13 @@
 		A10000000000000000000004 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000004 /* ContentView.swift */; };
 		A10000000000000000000005 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000005 /* Assets.xcassets */; };
 		A10000000000000000000006 /* SheetsAndHelp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000008 /* SheetsAndHelp.swift */; };
+		A10000000000000000000007 /* LocalModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000009 /* LocalModels.swift */; };
+		A10000000000000000000008 /* ChatBackend.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000000000000000000000A /* ChatBackend.swift */; };
+		A10000000000000000000009 /* AppleFoundationBackend.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000000000000000000000B /* AppleFoundationBackend.swift */; };
+		A1000000000000000000000A /* StubBackends.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000000000000000000000C /* StubBackends.swift */; };
+		A1000000000000000000000B /* HardwareProfiler.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000000000000000000000D /* HardwareProfiler.swift */; };
+		A1000000000000000000000C /* ModelRequirementsSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000000000000000000000E /* ModelRequirementsSheet.swift */; };
+		A1000000000000000000000D /* ModelRequirements.json in Resources */ = {isa = PBXBuildFile; fileRef = A2000000000000000000000F /* ModelRequirements.json */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +31,13 @@
 		A20000000000000000000006 /* FoundationChat.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = FoundationChat.entitlements; sourceTree = "<group>"; };
 		A20000000000000000000007 /* FoundationChat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FoundationChat.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A20000000000000000000008 /* SheetsAndHelp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SheetsAndHelp.swift; sourceTree = "<group>"; };
+		A20000000000000000000009 /* LocalModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalModels.swift; sourceTree = "<group>"; };
+		A2000000000000000000000A /* ChatBackend.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatBackend.swift; sourceTree = "<group>"; };
+		A2000000000000000000000B /* AppleFoundationBackend.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleFoundationBackend.swift; sourceTree = "<group>"; };
+		A2000000000000000000000C /* StubBackends.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StubBackends.swift; sourceTree = "<group>"; };
+		A2000000000000000000000D /* HardwareProfiler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HardwareProfiler.swift; sourceTree = "<group>"; };
+		A2000000000000000000000E /* ModelRequirementsSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelRequirementsSheet.swift; sourceTree = "<group>"; };
+		A2000000000000000000000F /* ModelRequirements.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = ModelRequirements.json; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -51,7 +65,10 @@
 				A20000000000000000000001 /* FoundationChatApp.swift */,
 				A20000000000000000000002 /* ChatStore.swift */,
 				A40000000000000000000003 /* Models */,
+				A40000000000000000000006 /* Backends */,
+				A40000000000000000000007 /* System */,
 				A40000000000000000000004 /* Views */,
+				A40000000000000000000008 /* Resources */,
 				A20000000000000000000005 /* Assets.xcassets */,
 				A20000000000000000000006 /* FoundationChat.entitlements */,
 			);
@@ -62,6 +79,7 @@
 			isa = PBXGroup;
 			children = (
 				A20000000000000000000003 /* ChatModels.swift */,
+				A20000000000000000000009 /* LocalModels.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -81,6 +99,33 @@
 				A20000000000000000000007 /* FoundationChat.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		A40000000000000000000006 /* Backends */ = {
+			isa = PBXGroup;
+			children = (
+				A2000000000000000000000A /* ChatBackend.swift */,
+				A2000000000000000000000B /* AppleFoundationBackend.swift */,
+				A2000000000000000000000C /* StubBackends.swift */,
+			);
+			path = Backends;
+			sourceTree = "<group>";
+		};
+		A40000000000000000000007 /* System */ = {
+			isa = PBXGroup;
+			children = (
+				A2000000000000000000000D /* HardwareProfiler.swift */,
+				A2000000000000000000000E /* ModelRequirementsSheet.swift */,
+			);
+			path = System;
+			sourceTree = "<group>";
+		};
+		A40000000000000000000008 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				A2000000000000000000000F /* ModelRequirements.json */,
+			);
+			path = Resources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -142,6 +187,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A10000000000000000000005 /* Assets.xcassets in Resources */,
+				A1000000000000000000000D /* ModelRequirements.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -155,6 +201,12 @@
 				A10000000000000000000001 /* FoundationChatApp.swift in Sources */,
 				A10000000000000000000002 /* ChatStore.swift in Sources */,
 				A10000000000000000000003 /* ChatModels.swift in Sources */,
+				A10000000000000000000007 /* LocalModels.swift in Sources */,
+				A10000000000000000000008 /* ChatBackend.swift in Sources */,
+				A10000000000000000000009 /* AppleFoundationBackend.swift in Sources */,
+				A1000000000000000000000A /* StubBackends.swift in Sources */,
+				A1000000000000000000000B /* HardwareProfiler.swift in Sources */,
+				A1000000000000000000000C /* ModelRequirementsSheet.swift in Sources */,
 				A10000000000000000000004 /* ContentView.swift in Sources */,
 				A10000000000000000000006 /* SheetsAndHelp.swift in Sources */,
 			);

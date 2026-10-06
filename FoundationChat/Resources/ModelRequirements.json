@@ -1,0 +1,45 @@
+{
+  "version": 1,
+  "notes": "Hard if/and sheet for local model fit. Tighten numbers after real-Mac testing. Values for non-Apple rows are conservative estimates.",
+  "defaults": {
+    "tightRAMHeadroomGB": 2,
+    "diskSafetyMarginBytes": 1073741824
+  },
+  "models": {
+    "apple-fm-general": {
+      "minRAMGB": 8,
+      "recommendedRAMGB": 16,
+      "approximateInstallBytes": 0,
+      "requiresAppleIntelligence": true,
+      "isLive": true
+    },
+    "apple-fm-content-tagging": {
+      "minRAMGB": 8,
+      "recommendedRAMGB": 16,
+      "approximateInstallBytes": 0,
+      "requiresAppleIntelligence": true,
+      "isLive": true
+    },
+    "ollama-placeholder": {
+      "minRAMGB": 8,
+      "recommendedRAMGB": 16,
+      "approximateInstallBytes": 4294967296,
+      "requiresAppleIntelligence": false,
+      "isLive": false
+    },
+    "huggingface-placeholder": {
+      "minRAMGB": 8,
+      "recommendedRAMGB": 16,
+      "approximateInstallBytes": 4294967296,
+      "requiresAppleIntelligence": false,
+      "isLive": false
+    },
+    "unsloth-placeholder": {
+      "minRAMGB": 8,
+      "recommendedRAMGB": 16,
+      "approximateInstallBytes": 2147483648,
+      "requiresAppleIntelligence": false,
+      "isLive": false
+    }
+  }
+}

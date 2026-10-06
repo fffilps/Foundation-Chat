@@ -1,6 +1,5 @@
 import AppKit
 import Foundation
-import FoundationModels
 import SwiftUI
 import UniformTypeIdentifiers
 
@@ -21,13 +20,18 @@ final class ChatStore: ObservableObject {
         draftTokens: 0,
         isEstimate: true
     )
+    @Published private(set) var machineProfile = HardwareProfiler.profile(appleIntelligenceAvailable: false)
+    @Published private(set) var selectedFit = FitResult(
+        verdict: .unsupported,
+        summary: "Checking…",
+        detail: ""
+    )
     @Published var showHelp = false
     @Published var showChatOptions = false
     @Published var showInstructions = false
     @Published var helpTopic: HelpTopic = .overview
 
-    private var session: LanguageModelSession?
-    private var activeModel = SystemLanguageModel.default
+    private var activeBackend: any ChatBackend
     private var generationTask: Task<Void, Never>?
     private var contextTask: Task<Void, Never>?
     private var draftTokenTask: Task<Void, Never>?
@@ -41,8 +45,10 @@ final class ChatStore: ObservableObject {
         try? FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
         persistenceURL = folder.appendingPathComponent("conversations.json")
         settingsURL = folder.appendingPathComponent("settings.json")
+        activeBackend = ChatBackendFactory.make(modelID: LocalModelCatalog.appleGeneralID)
 
         loadSettings()
+        activeBackend = ChatBackendFactory.make(modelID: settings.selectedModelID)
         load()
         if conversations.isEmpty {
             startNewChat()
@@ -56,14 +62,50 @@ final class ChatStore: ObservableObject {
         hasFinishedLaunching = true
     }
 
+    var activeModelDisplayName: String {
+        activeBackend.displayName
+    }
+
+    var selectedModelDescriptor: LocalModelDescriptor {
+        LocalModelCatalog.descriptor(id: settings.selectedModelID)
+            ?? LocalModelCatalog.descriptor(id: LocalModelCatalog.appleGeneralID)!
+    }
+
+    var showsAppleControls: Bool {
+        selectedModelDescriptor.provider == .appleFoundation && selectedModelDescriptor.isLive
+    }
+
     func updateSettings(_ mutate: (inout GenerationSettings) -> Void) {
         var next = settings
+        let previous = settings
         mutate(&next)
+        next.selectedModelID = LocalModelCatalog.resolvedID(next.selectedModelID)
+
+        if next.selectedModelID != previous.selectedModelID {
+            if let useCase = LocalModelCatalog.descriptor(id: next.selectedModelID)?.appleUseCase {
+                next.useCase = useCase
+            }
+        } else if next.useCase != previous.useCase,
+                  LocalModelCatalog.descriptor(id: next.selectedModelID)?.provider == .appleFoundation {
+            next.selectedModelID = LocalModelCatalog.descriptor(forUseCase: next.useCase).id
+        }
+
+        let modelChanged = next.selectedModelID != settings.selectedModelID
         settings = next
         saveSettings()
+        if modelChanged {
+            activeBackend = ChatBackendFactory.make(modelID: settings.selectedModelID)
+        }
         if hasFinishedLaunching {
+            refreshAvailability()
             recreateSession()
             refreshContextUsage()
+        }
+    }
+
+    func selectModel(id: String) {
+        updateSettings { settings in
+            settings.selectedModelID = LocalModelCatalog.resolvedID(id)
         }
     }
 
@@ -79,9 +121,28 @@ final class ChatStore: ObservableObject {
 
     var canSend: Bool {
         availability.isReady
+            && selectedFit.canAttemptChat
+            && activeBackend.isLive
             && !isGenerating
             && !draft.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
             && !contextUsage.isOverLimit
+    }
+
+    var sendBlockedReason: String? {
+        if isGenerating { return nil }
+        if !activeBackend.isLive || selectedFit.verdict == .comingSoon {
+            return selectedFit.detail.isEmpty ? availability.detail : selectedFit.detail
+        }
+        if !selectedFit.canAttemptChat {
+            return selectedFit.detail
+        }
+        if !availability.isReady {
+            return availability.detail
+        }
+        if contextUsage.isOverLimit {
+            return "Context window is full. Start a new chat to continue."
+        }
+        return nil
     }
 
     var contextWarning: String? {
@@ -96,23 +157,25 @@ final class ChatStore: ObservableObject {
     }
 
     func refreshAvailability() {
-        let model = makeModel()
-        activeModel = model
-        switch model.availability {
-        case .available:
-            availability = .available
-        case .unavailable(.deviceNotEligible):
-            availability = .deviceNotEligible
-        case .unavailable(.appleIntelligenceNotEnabled):
-            availability = .appleIntelligenceNotEnabled
-        case .unavailable(.modelNotReady):
-            availability = .modelNotReady
-        case .unavailable(let reason):
-            availability = .unknown(String(describing: reason))
-        @unknown default:
-            availability = .unknown("Unknown availability state")
+        availability = activeBackend.availability(settings: settings)
+        let appleReady = availability.isReady
+            || (activeBackend.provider != .appleFoundation && probeAppleReady())
+        machineProfile = HardwareProfiler.profile(appleIntelligenceAvailable: appleReady)
+        // For Apple backends, fit should use the real availability signal.
+        var profile = machineProfile
+        if activeBackend.provider == .appleFoundation {
+            profile.appleIntelligenceAvailable = availability.isReady
         }
+        machineProfile = profile
+        selectedFit = ModelRequirementsSheet.evaluate(
+            model: selectedModelDescriptor,
+            profile: machineProfile
+        )
         refreshContextUsage()
+    }
+
+    func refreshMachineProfile() {
+        refreshAvailability()
     }
 
     func startNewChat() {
@@ -186,7 +249,7 @@ final class ChatStore: ObservableObject {
     func applyPreset(_ preset: InstructionPreset) {
         updateInstructions(preset.instructions)
         if preset.id == "tags" {
-            updateSettings { $0.useCase = .contentTagging }
+            selectModel(id: LocalModelCatalog.appleTaggingID)
         }
     }
 
@@ -229,7 +292,10 @@ final class ChatStore: ObservableObject {
     func copySelectedTranscript() {
         guard let conversation = selectedConversation else { return }
         NSPasteboard.general.clearContents()
-        NSPasteboard.general.setString(conversation.exportedTranscript, forType: .string)
+        NSPasteboard.general.setString(
+            conversation.exportedTranscript(assistantName: activeModelDisplayName),
+            forType: .string
+        )
     }
 
     func exportSelectedTranscript() {
@@ -239,7 +305,8 @@ final class ChatStore: ObservableObject {
         panel.nameFieldStringValue = "\(sanitizeFilename(conversation.title)).md"
         panel.title = "Export Chat"
         guard panel.runModal() == .OK, let url = panel.url else { return }
-        try? conversation.exportedTranscript.write(to: url, atomically: true, encoding: .utf8)
+        try? conversation.exportedTranscript(assistantName: activeModelDisplayName)
+            .write(to: url, atomically: true, encoding: .utf8)
     }
 
     func openHelp(topic: HelpTopic = .overview) {
@@ -251,8 +318,9 @@ final class ChatStore: ObservableObject {
         contextTask?.cancel()
         let conversation = selectedConversation
         let draftText = draft
-        let contextSize = max(activeModel.contextSize, 1)
+        let contextSize = max(activeBackend.contextSize, 1)
         let settingsSnapshot = settings
+        let backend = activeBackend
 
         contextTask = Task { [weak self] in
             guard let self else { return }
@@ -267,20 +335,23 @@ final class ChatStore: ObservableObject {
             var draftCount = estimate.draft
             var isEstimate = true
 
-            if self.availability.isReady {
-                if #available(macOS 26.4, *) {
-                    do {
-                        let entries = self.transcriptEntries(for: conversation)
-                        used = try await self.activeModel.tokenCount(for: entries)
-                        if draftText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                            draftCount = 0
-                        } else {
-                            draftCount = try await self.activeModel.tokenCount(for: draftText)
-                        }
+            if self.availability.isReady, backend.isLive {
+                do {
+                    if let exact = try await backend.tokenCount(
+                        forMessages: conversation?.messages ?? [],
+                        instructions: conversation?.instructions ?? ChatConversation.defaultInstructions
+                    ) {
+                        used = exact
                         isEstimate = false
-                    } catch {
-                        // Keep estimate if token counting isn't ready yet.
                     }
+                    if draftText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                        draftCount = 0
+                    } else if let draftExact = try await backend.tokenCount(for: draftText) {
+                        draftCount = draftExact
+                        isEstimate = false
+                    }
+                } catch {
+                    // Keep estimate if token counting isn't ready yet.
                 }
             }
 
@@ -312,18 +383,15 @@ final class ChatStore: ObservableObject {
 
     private func send(_ prompt: String) {
         refreshAvailability()
-        guard availability.isReady else {
-            errorMessage = availability.detail
+        guard availability.isReady, activeBackend.isLive, selectedFit.canAttemptChat else {
+            errorMessage = sendBlockedReason ?? availability.detail
             return
         }
 
         guard let index = selectedConversationIndex else { return }
 
         errorMessage = nil
-
-        if session == nil {
-            recreateSession()
-        }
+        recreateSession()
 
         conversations[index].messages.append(ChatMessage(role: .user, text: prompt))
         conversations[index].updatedAt = .now
@@ -340,21 +408,14 @@ final class ChatStore: ObservableObject {
         save()
         refreshContextUsage()
 
-        guard let session else {
-            errorMessage = "Could not create a model session."
-            markAssistantFinished(assistantID, text: "Session unavailable.")
-            return
-        }
-
-        let options = makeGenerationOptions()
+        let stream = activeBackend.streamResponse(to: prompt, settings: settings)
 
         generationTask = Task { [weak self] in
             guard let self else { return }
             do {
-                let stream = session.streamResponse(to: prompt, options: options)
-                for try await snapshot in stream {
+                for try await content in stream {
                     if Task.isCancelled { break }
-                    self.updateAssistantMessage(assistantID, text: snapshot.content, streaming: true)
+                    self.updateAssistantMessage(assistantID, text: content, streaming: true)
                 }
                 self.updateAssistantMessage(assistantID, text: nil, streaming: false)
                 self.isGenerating = false
@@ -369,30 +430,6 @@ final class ChatStore: ObservableObject {
                 self.refreshContextUsage()
             }
         }
-    }
-
-    private func makeGenerationOptions() -> GenerationOptions {
-        var options = GenerationOptions()
-        if settings.greedySampling {
-            options.sampling = .greedy
-        }
-        if settings.useCustomTemperature {
-            options.temperature = settings.temperature
-        }
-        if settings.limitResponseTokens {
-            options.maximumResponseTokens = max(settings.maximumResponseTokens, 16)
-        }
-        return options
-    }
-
-    private func makeModel() -> SystemLanguageModel {
-        let useCase: SystemLanguageModel.UseCase = settings.useCase == .contentTagging
-            ? .contentTagging
-            : .general
-        let guardrails: SystemLanguageModel.Guardrails = settings.guardrails == .permissiveTransformations
-            ? .permissiveContentTransformations
-            : .default
-        return SystemLanguageModel(useCase: useCase, guardrails: guardrails)
     }
 
     private func updateAssistantMessage(_ id: UUID, text: String?, streaming: Bool) {
@@ -421,69 +458,12 @@ final class ChatStore: ObservableObject {
     }
 
     private func recreateSession() {
-        activeModel = makeModel()
-
-        guard let conversation = selectedConversation else {
-            session = LanguageModelSession(
-                model: activeModel,
-                instructions: ChatConversation.defaultInstructions
-            )
-            return
-        }
-
-        let entries = transcriptEntries(for: conversation)
-        session = LanguageModelSession(
-            model: activeModel,
-            transcript: Transcript(entries: entries)
+        let conversation = selectedConversation
+        activeBackend.prepareSession(
+            instructions: conversation?.instructions ?? ChatConversation.defaultInstructions,
+            messages: conversation?.messages ?? [],
+            settings: settings
         )
-    }
-
-    private func transcriptEntries(for conversation: ChatConversation?) -> [Transcript.Entry] {
-        guard let conversation else {
-            return [
-                .instructions(
-                    Transcript.Instructions(
-                        segments: [.text(Transcript.TextSegment(content: ChatConversation.defaultInstructions))],
-                        toolDefinitions: []
-                    )
-                )
-            ]
-        }
-
-        var entries: [Transcript.Entry] = [
-            .instructions(
-                Transcript.Instructions(
-                    segments: [.text(Transcript.TextSegment(content: conversation.instructions))],
-                    toolDefinitions: []
-                )
-            )
-        ]
-
-        for message in conversation.messages where !message.isStreaming && !message.text.isEmpty {
-            switch message.role {
-            case .user:
-                entries.append(
-                    .prompt(
-                        Transcript.Prompt(
-                            segments: [.text(Transcript.TextSegment(content: message.text))]
-                        )
-                    )
-                )
-            case .assistant:
-                entries.append(
-                    .response(
-                        Transcript.Response(
-                            assetIDs: [],
-                            segments: [.text(Transcript.TextSegment(content: message.text))]
-                        )
-                    )
-                )
-            case .system:
-                continue
-            }
-        }
-
-        return entries
     }
 
     private func load() {
@@ -518,6 +498,11 @@ final class ChatStore: ObservableObject {
         return cleaned.isEmpty ? "chat" : cleaned
     }
 
+    private func probeAppleReady() -> Bool {
+        let probe = AppleFoundationBackend(modelID: LocalModelCatalog.appleGeneralID)
+        return probe.availability(settings: settings).isReady
+    }
+
     private static func estimateTokens(
         instructions: String,
         messages: [ChatMessage],
@@ -545,6 +530,9 @@ final class ChatStore: ObservableObject {
         }
         if lower.contains("rate") {
             return "The model is rate limited right now. Wait a moment and try again."
+        }
+        if lower.contains("coming soon") || lower.contains("not configured") {
+            return text
         }
         return text.isEmpty ? "Something went wrong while generating a response." : text
     }

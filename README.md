@@ -1,16 +1,30 @@
 # Foundation Chat
 
-A native macOS chat app for Apple’s on-device **Foundation Models** — the same engine behind the `fm` CLI, with a real Mac GUI.
+A native macOS chat app for Apple’s on-device **Foundation Models** — the same engine behind Apple’s `fm` CLI (macOS 27) and this repo’s **`fmx`** CLI (macOS 26+).
 
 ## Features
 
-- Streaming on-device chat (same `SystemLanguageModel` as `fm`)
-- **Context meter** with live token counts (`fm count-tokens` equivalent)
+- Streaming on-device chat (same `SystemLanguageModel` as `fm` / `fmx`)
+- **Context meter** with live token counts (`fm count-tokens` / `fmx count-tokens` equivalent)
 - Instructions + presets (coding, writing, concise, teacher, tagger)
 - Generation options: temperature, max tokens, greedy sampling, use case, guardrails
 - Help guide with context / CLI / privacy topics
 - Export / copy transcripts, rename chats, prompt starters
 - Settings window for status + options
+
+## CLI for macOS 26 (`fmx`)
+
+Apple’s first-party `fm` ships with **macOS 27**. For **macOS 26** (and portable installs), this repo includes **`fmx`** — an fm-shaped Swift CLI:
+
+```bash
+cd fmx
+swift build -c release
+./.build/release/fmx available
+./.build/release/fmx respond "Hello"
+./.build/release/fmx chat
+```
+
+See [fmx/README.md](fmx/README.md).
 
 ## Requirements
 

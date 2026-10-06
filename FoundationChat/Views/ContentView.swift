@@ -306,19 +306,32 @@ struct MessageBubble: View {
                     }
                 }
 
-                Text(message.text.isEmpty && message.isStreaming ? "Thinking…" : message.text)
-                    .font(.body)
-                    .textSelection(.enabled)
-                    .padding(.horizontal, 14)
-                    .padding(.vertical, 10)
-                    .background(
-                        RoundedRectangle(cornerRadius: 14, style: .continuous)
-                            .fill(isUser ? Color.accentColor.opacity(0.18) : Color(nsColor: .controlBackgroundColor))
-                    )
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 14, style: .continuous)
-                            .strokeBorder(Color.primary.opacity(0.06), lineWidth: 1)
-                    )
+                Group {
+                    if message.text.isEmpty && message.isStreaming {
+                        Text("Thinking…")
+                            .font(.body)
+                            .foregroundStyle(.secondary)
+                    } else if isUser {
+                        Text(message.text)
+                            .font(.body)
+                            .textSelection(.enabled)
+                    } else {
+                        MarkdownContentView(
+                            markdown: message.text,
+                            isStreaming: message.isStreaming
+                        )
+                    }
+                }
+                .padding(.horizontal, 14)
+                .padding(.vertical, 10)
+                .background(
+                    RoundedRectangle(cornerRadius: 14, style: .continuous)
+                        .fill(isUser ? Color.accentColor.opacity(0.18) : Color(nsColor: .controlBackgroundColor))
+                )
+                .overlay(
+                    RoundedRectangle(cornerRadius: 14, style: .continuous)
+                        .strokeBorder(Color.primary.opacity(0.06), lineWidth: 1)
+                )
 
                 if message.isStreaming {
                     ProgressView()

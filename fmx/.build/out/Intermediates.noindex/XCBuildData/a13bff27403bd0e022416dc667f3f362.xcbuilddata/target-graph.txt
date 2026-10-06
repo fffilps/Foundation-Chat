@@ -1,0 +1,11 @@
+Target dependency graph (5 targets)
+Target 'AllExcludingTests' in project 'Aggregate'
+➜ Explicit dependency on target 'fmx-product' in project 'fmx'
+Target 'fmx-product' in project 'fmx'
+➜ Explicit dependency on target 'ArgumentParser-product' in project 'swift-argument-parser'
+Target 'ArgumentParser-product' in project 'swift-argument-parser'
+➜ Explicit dependency on target 'ArgumentParser' in project 'swift-argument-parser'
+➜ Explicit dependency on target 'ArgumentParserToolInfo' in project 'swift-argument-parser'
+Target 'ArgumentParser' in project 'swift-argument-parser'
+➜ Explicit dependency on target 'ArgumentParserToolInfo' in project 'swift-argument-parser'
+Target 'ArgumentParserToolInfo' in project 'swift-argument-parser' (no dependencies)

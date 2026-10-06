@@ -1,0 +1,49 @@
+{
+  "": {
+    "dependencies": "/Users/jmariwyatt/Desktop/VSCode/Cursor Apps/Foundation Chat/fmx/.build/arm64-apple-macosx/release/fmx.build/fmx.d",
+    "object": "/Users/jmariwyatt/Desktop/VSCode/Cursor Apps/Foundation Chat/fmx/.build/arm64-apple-macosx/release/fmx.build/fmx.o",
+    "swift-dependencies": "/Users/jmariwyatt/Desktop/VSCode/Cursor Apps/Foundation Chat/fmx/.build/arm64-apple-macosx/release/fmx.build/primary.swiftdeps"
+  },
+  "/Users/jmariwyatt/Desktop/VSCode/Cursor Apps/Foundation Chat/fmx/Sources/fmx/Commands/AvailableCommand.swift": {
+    "object": "/Users/jmariwyatt/Desktop/VSCode/Cursor Apps/Foundation Chat/fmx/.build/arm64-apple-macosx/release/fmx.build/AvailableCommand.swift.o",
+    "swiftmodule": "/Users/jmariwyatt/Desktop/VSCode/Cursor Apps/Foundation Chat/fmx/.build/arm64-apple-macosx/release/fmx.build/AvailableCommand~partial.swiftmodule",
+    "swift-dependencies": "/Users/jmariwyatt/Desktop/VSCode/Cursor Apps/Foundation Chat/fmx/.build/arm64-apple-macosx/release/fmx.build/AvailableCommand.swiftdeps",
+    "diagnostics": "/Users/jmariwyatt/Desktop/VSCode/Cursor Apps/Foundation Chat/fmx/.build/arm64-apple-macosx/release/fmx.build/AvailableCommand.dia"
+  },
+  "/Users/jmariwyatt/Desktop/VSCode/Cursor Apps/Foundation Chat/fmx/Sources/fmx/Commands/ChatCommand.swift": {
+    "object": "/Users/jmariwyatt/Desktop/VSCode/Cursor Apps/Foundation Chat/fmx/.build/arm64-apple-macosx/release/fmx.build/ChatCommand.swift.o",
+    "swiftmodule": "/Users/jmariwyatt/Desktop/VSCode/Cursor Apps/Foundation Chat/fmx/.build/arm64-apple-macosx/release/fmx.build/ChatCommand~partial.swiftmodule",
+    "swift-dependencies": "/Users/jmariwyatt/Desktop/VSCode/Cursor Apps/Foundation Chat/fmx/.build/arm64-apple-macosx/release/fmx.build/ChatCommand.swiftdeps",
+    "diagnostics": "/Users/jmariwyatt/Desktop/VSCode/Cursor Apps/Foundation Chat/fmx/.build/arm64-apple-macosx/release/fmx.build/ChatCommand.dia"
+  },
+  "/Users/jmariwyatt/Desktop/VSCode/Cursor Apps/Foundation Chat/fmx/Sources/fmx/Commands/CountTokensCommand.swift": {
+    "object": "/Users/jmariwyatt/Desktop/VSCode/Cursor Apps/Foundation Chat/fmx/.build/arm64-apple-macosx/release/fmx.build/CountTokensCommand.swift.o",
+    "swiftmodule": "/Users/jmariwyatt/Desktop/VSCode/Cursor Apps/Foundation Chat/fmx/.build/arm64-apple-macosx/release/fmx.build/CountTokensCommand~partial.swiftmodule",
+    "swift-dependencies": "/Users/jmariwyatt/Desktop/VSCode/Cursor Apps/Foundation Chat/fmx/.build/arm64-apple-macosx/release/fmx.build/CountTokensCommand.swiftdeps",
+    "diagnostics": "/Users/jmariwyatt/Desktop/VSCode/Cursor Apps/Foundation Chat/fmx/.build/arm64-apple-macosx/release/fmx.build/CountTokensCommand.dia"
+  },
+  "/Users/jmariwyatt/Desktop/VSCode/Cursor Apps/Foundation Chat/fmx/Sources/fmx/Commands/RespondCommand.swift": {
+    "object": "/Users/jmariwyatt/Desktop/VSCode/Cursor Apps/Foundation Chat/fmx/.build/arm64-apple-macosx/release/fmx.build/RespondCommand.swift.o",
+    "swiftmodule": "/Users/jmariwyatt/Desktop/VSCode/Cursor Apps/Foundation Chat/fmx/.build/arm64-apple-macosx/release/fmx.build/RespondCommand~partial.swiftmodule",
+    "swift-dependencies": "/Users/jmariwyatt/Desktop/VSCode/Cursor Apps/Foundation Chat/fmx/.build/arm64-apple-macosx/release/fmx.build/RespondCommand.swiftdeps",
+    "diagnostics": "/Users/jmariwyatt/Desktop/VSCode/Cursor Apps/Foundation Chat/fmx/.build/arm64-apple-macosx/release/fmx.build/RespondCommand.dia"
+  },
+  "/Users/jmariwyatt/Desktop/VSCode/Cursor Apps/Foundation Chat/fmx/Sources/fmx/Commands/SchemaCommand.swift": {
+    "object": "/Users/jmariwyatt/Desktop/VSCode/Cursor Apps/Foundation Chat/fmx/.build/arm64-apple-macosx/release/fmx.build/SchemaCommand.swift.o",
+    "swiftmodule": "/Users/jmariwyatt/Desktop/VSCode/Cursor Apps/Foundation Chat/fmx/.build/arm64-apple-macosx/release/fmx.build/SchemaCommand~partial.swiftmodule",
+    "swift-dependencies": "/Users/jmariwyatt/Desktop/VSCode/Cursor Apps/Foundation Chat/fmx/.build/arm64-apple-macosx/release/fmx.build/SchemaCommand.swiftdeps",
+    "diagnostics": "/Users/jmariwyatt/Desktop/VSCode/Cursor Apps/Foundation Chat/fmx/.build/arm64-apple-macosx/release/fmx.build/SchemaCommand.dia"
+  },
+  "/Users/jmariwyatt/Desktop/VSCode/Cursor Apps/Foundation Chat/fmx/Sources/fmx/FMX.swift": {
+    "object": "/Users/jmariwyatt/Desktop/VSCode/Cursor Apps/Foundation Chat/fmx/.build/arm64-apple-macosx/release/fmx.build/FMX.swift.o",
+    "swiftmodule": "/Users/jmariwyatt/Desktop/VSCode/Cursor Apps/Foundation Chat/fmx/.build/arm64-apple-macosx/release/fmx.build/FMX~partial.swiftmodule",
+    "swift-dependencies": "/Users/jmariwyatt/Desktop/VSCode/Cursor Apps/Foundation Chat/fmx/.build/arm64-apple-macosx/release/fmx.build/FMX.swiftdeps",
+    "diagnostics": "/Users/jmariwyatt/Desktop/VSCode/Cursor Apps/Foundation Chat/fmx/.build/arm64-apple-macosx/release/fmx.build/FMX.dia"
+  },
+  "/Users/jmariwyatt/Desktop/VSCode/Cursor Apps/Foundation Chat/fmx/Sources/fmx/ModelSupport.swift": {
+    "object": "/Users/jmariwyatt/Desktop/VSCode/Cursor Apps/Foundation Chat/fmx/.build/arm64-apple-macosx/release/fmx.build/ModelSupport.swift.o",
+    "swiftmodule": "/Users/jmariwyatt/Desktop/VSCode/Cursor Apps/Foundation Chat/fmx/.build/arm64-apple-macosx/release/fmx.build/ModelSupport~partial.swiftmodule",
+    "swift-dependencies": "/Users/jmariwyatt/Desktop/VSCode/Cursor Apps/Foundation Chat/fmx/.build/arm64-apple-macosx/release/fmx.build/ModelSupport.swiftdeps",
+    "diagnostics": "/Users/jmariwyatt/Desktop/VSCode/Cursor Apps/Foundation Chat/fmx/.build/arm64-apple-macosx/release/fmx.build/ModelSupport.dia"
+  }
+}

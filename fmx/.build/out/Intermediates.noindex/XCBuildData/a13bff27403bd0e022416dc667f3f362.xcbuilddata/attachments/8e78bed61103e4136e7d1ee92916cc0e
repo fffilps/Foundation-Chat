@@ -1,0 +1,16 @@
+{
+  "" : {
+    "const-values" : "/Users/jmariwyatt/Desktop/VSCode/Cursor Apps/Foundation Chat/fmx/.build/out/Intermediates.noindex/swift-argument-parser.build/Release/ArgumentParserToolInfo-t.build/Objects-normal/arm64/ArgumentParserToolInfo-primary.swiftconstvalues",
+    "dependencies" : "/Users/jmariwyatt/Desktop/VSCode/Cursor Apps/Foundation Chat/fmx/.build/out/Intermediates.noindex/swift-argument-parser.build/Release/ArgumentParserToolInfo-t.build/Objects-normal/arm64/ArgumentParserToolInfo-primary.d",
+    "diagnostics" : "/Users/jmariwyatt/Desktop/VSCode/Cursor Apps/Foundation Chat/fmx/.build/out/Intermediates.noindex/swift-argument-parser.build/Release/ArgumentParserToolInfo-t.build/Objects-normal/arm64/ArgumentParserToolInfo-primary.dia",
+    "emit-module-dependencies" : "/Users/jmariwyatt/Desktop/VSCode/Cursor Apps/Foundation Chat/fmx/.build/out/Intermediates.noindex/swift-argument-parser.build/Release/ArgumentParserToolInfo-t.build/Objects-normal/arm64/ArgumentParserToolInfo-primary-emit-module.d",
+    "emit-module-diagnostics" : "/Users/jmariwyatt/Desktop/VSCode/Cursor Apps/Foundation Chat/fmx/.build/out/Intermediates.noindex/swift-argument-parser.build/Release/ArgumentParserToolInfo-t.build/Objects-normal/arm64/ArgumentParserToolInfo-primary-emit-module.dia",
+    "pch" : "/Users/jmariwyatt/Desktop/VSCode/Cursor Apps/Foundation Chat/fmx/.build/out/Intermediates.noindex/swift-argument-parser.build/Release/ArgumentParserToolInfo-t.build/Objects-normal/arm64/ArgumentParserToolInfo-primary-Bridging-header.pch",
+    "swift-dependencies" : "/Users/jmariwyatt/Desktop/VSCode/Cursor Apps/Foundation Chat/fmx/.build/out/Intermediates.noindex/swift-argument-parser.build/Release/ArgumentParserToolInfo-t.build/Objects-normal/arm64/ArgumentParserToolInfo-primary.swiftdeps"
+  },
+  "/Users/jmariwyatt/Desktop/VSCode/Cursor Apps/Foundation Chat/fmx/.build/checkouts/swift-argument-parser/Sources/ArgumentParserToolInfo/ToolInfo.swift" : {
+    "index-unit-output-path" : "/swift-argument-parser.build/Release/ArgumentParserToolInfo-t.build/Objects-normal/arm64/ToolInfo.o",
+    "llvm-bc" : "/Users/jmariwyatt/Desktop/VSCode/Cursor Apps/Foundation Chat/fmx/.build/out/Intermediates.noindex/swift-argument-parser.build/Release/ArgumentParserToolInfo-t.build/Objects-normal/arm64/ToolInfo.bc",
+    "object" : "/Users/jmariwyatt/Desktop/VSCode/Cursor Apps/Foundation Chat/fmx/.build/out/Intermediates.noindex/swift-argument-parser.build/Release/ArgumentParserToolInfo-t.build/Objects-normal/arm64/ToolInfo.o"
+  }
+}

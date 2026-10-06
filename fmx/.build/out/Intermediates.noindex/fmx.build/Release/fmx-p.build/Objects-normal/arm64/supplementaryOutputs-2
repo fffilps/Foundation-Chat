@@ -1,0 +1,11 @@
+{
+  "/Users/jmariwyatt/Desktop/VSCode/Cursor Apps/Foundation Chat/fmx/Sources/fmx/Commands/AvailableCommand.swift" : {
+    "abi-baseline-json" : "/Users/jmariwyatt/Desktop/VSCode/Cursor Apps/Foundation Chat/fmx/.build/out/Intermediates.noindex/fmx.build/Release/fmx-p.build/Objects-normal/arm64/fmx.abi.json",
+    "const-values" : "/Users/jmariwyatt/Desktop/VSCode/Cursor Apps/Foundation Chat/fmx/.build/out/Intermediates.noindex/fmx.build/Release/fmx-p.build/Objects-normal/arm64/fmx-primary.swiftconstvalues",
+    "dependencies" : "/Users/jmariwyatt/Desktop/VSCode/Cursor Apps/Foundation Chat/fmx/.build/out/Intermediates.noindex/fmx.build/Release/fmx-p.build/Objects-normal/arm64/fmx-primary.d",
+    "diagnostics" : "/Users/jmariwyatt/Desktop/VSCode/Cursor Apps/Foundation Chat/fmx/.build/out/Intermediates.noindex/fmx.build/Release/fmx-p.build/Objects-normal/arm64/fmx-primary.dia",
+    "swiftdoc" : "/Users/jmariwyatt/Desktop/VSCode/Cursor Apps/Foundation Chat/fmx/.build/out/Intermediates.noindex/fmx.build/Release/fmx-p.build/Objects-normal/arm64/fmx.swiftdoc",
+    "swiftmodule" : "/Users/jmariwyatt/Desktop/VSCode/Cursor Apps/Foundation Chat/fmx/.build/out/Intermediates.noindex/fmx.build/Release/fmx-p.build/Objects-normal/arm64/fmx.swiftmodule",
+    "swiftsourceinfo" : "/Users/jmariwyatt/Desktop/VSCode/Cursor Apps/Foundation Chat/fmx/.build/out/Intermediates.noindex/fmx.build/Release/fmx-p.build/Objects-normal/arm64/fmx.swiftsourceinfo"
+  }
+}

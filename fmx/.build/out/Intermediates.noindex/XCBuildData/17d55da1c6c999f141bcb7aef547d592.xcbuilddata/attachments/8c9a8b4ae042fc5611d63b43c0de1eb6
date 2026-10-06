@@ -1,0 +1,46 @@
+{
+  "" : {
+    "const-values" : "/Users/jmariwyatt/Desktop/VSCode/Cursor Apps/Foundation Chat/fmx/.build/out/Intermediates.noindex/fmx.build/Release/fmx-p.build/Objects-normal/arm64/fmx-primary.swiftconstvalues",
+    "dependencies" : "/Users/jmariwyatt/Desktop/VSCode/Cursor Apps/Foundation Chat/fmx/.build/out/Intermediates.noindex/fmx.build/Release/fmx-p.build/Objects-normal/arm64/fmx-primary.d",
+    "diagnostics" : "/Users/jmariwyatt/Desktop/VSCode/Cursor Apps/Foundation Chat/fmx/.build/out/Intermediates.noindex/fmx.build/Release/fmx-p.build/Objects-normal/arm64/fmx-primary.dia",
+    "emit-module-dependencies" : "/Users/jmariwyatt/Desktop/VSCode/Cursor Apps/Foundation Chat/fmx/.build/out/Intermediates.noindex/fmx.build/Release/fmx-p.build/Objects-normal/arm64/fmx-primary-emit-module.d",
+    "emit-module-diagnostics" : "/Users/jmariwyatt/Desktop/VSCode/Cursor Apps/Foundation Chat/fmx/.build/out/Intermediates.noindex/fmx.build/Release/fmx-p.build/Objects-normal/arm64/fmx-primary-emit-module.dia",
+    "pch" : "/Users/jmariwyatt/Desktop/VSCode/Cursor Apps/Foundation Chat/fmx/.build/out/Intermediates.noindex/fmx.build/Release/fmx-p.build/Objects-normal/arm64/fmx-primary-Bridging-header.pch",
+    "swift-dependencies" : "/Users/jmariwyatt/Desktop/VSCode/Cursor Apps/Foundation Chat/fmx/.build/out/Intermediates.noindex/fmx.build/Release/fmx-p.build/Objects-normal/arm64/fmx-primary.swiftdeps"
+  },
+  "/Users/jmariwyatt/Desktop/VSCode/Cursor Apps/Foundation Chat/fmx/Sources/fmx/Commands/AvailableCommand.swift" : {
+    "index-unit-output-path" : "/fmx.build/Release/fmx-p.build/Objects-normal/arm64/AvailableCommand.o",
+    "llvm-bc" : "/Users/jmariwyatt/Desktop/VSCode/Cursor Apps/Foundation Chat/fmx/.build/out/Intermediates.noindex/fmx.build/Release/fmx-p.build/Objects-normal/arm64/AvailableCommand.bc",
+    "object" : "/Users/jmariwyatt/Desktop/VSCode/Cursor Apps/Foundation Chat/fmx/.build/out/Intermediates.noindex/fmx.build/Release/fmx-p.build/Objects-normal/arm64/AvailableCommand.o"
+  },
+  "/Users/jmariwyatt/Desktop/VSCode/Cursor Apps/Foundation Chat/fmx/Sources/fmx/Commands/ChatCommand.swift" : {
+    "index-unit-output-path" : "/fmx.build/Release/fmx-p.build/Objects-normal/arm64/ChatCommand.o",
+    "llvm-bc" : "/Users/jmariwyatt/Desktop/VSCode/Cursor Apps/Foundation Chat/fmx/.build/out/Intermediates.noindex/fmx.build/Release/fmx-p.build/Objects-normal/arm64/ChatCommand.bc",
+    "object" : "/Users/jmariwyatt/Desktop/VSCode/Cursor Apps/Foundation Chat/fmx/.build/out/Intermediates.noindex/fmx.build/Release/fmx-p.build/Objects-normal/arm64/ChatCommand.o"
+  },
+  "/Users/jmariwyatt/Desktop/VSCode/Cursor Apps/Foundation Chat/fmx/Sources/fmx/Commands/CountTokensCommand.swift" : {
+    "index-unit-output-path" : "/fmx.build/Release/fmx-p.build/Objects-normal/arm64/CountTokensCommand.o",
+    "llvm-bc" : "/Users/jmariwyatt/Desktop/VSCode/Cursor Apps/Foundation Chat/fmx/.build/out/Intermediates.noindex/fmx.build/Release/fmx-p.build/Objects-normal/arm64/CountTokensCommand.bc",
+    "object" : "/Users/jmariwyatt/Desktop/VSCode/Cursor Apps/Foundation Chat/fmx/.build/out/Intermediates.noindex/fmx.build/Release/fmx-p.build/Objects-normal/arm64/CountTokensCommand.o"
+  },
+  "/Users/jmariwyatt/Desktop/VSCode/Cursor Apps/Foundation Chat/fmx/Sources/fmx/Commands/RespondCommand.swift" : {
+    "index-unit-output-path" : "/fmx.build/Release/fmx-p.build/Objects-normal/arm64/RespondCommand.o",
+    "llvm-bc" : "/Users/jmariwyatt/Desktop/VSCode/Cursor Apps/Foundation Chat/fmx/.build/out/Intermediates.noindex/fmx.build/Release/fmx-p.build/Objects-normal/arm64/RespondCommand.bc",
+    "object" : "/Users/jmariwyatt/Desktop/VSCode/Cursor Apps/Foundation Chat/fmx/.build/out/Intermediates.noindex/fmx.build/Release/fmx-p.build/Objects-normal/arm64/RespondCommand.o"
+  },
+  "/Users/jmariwyatt/Desktop/VSCode/Cursor Apps/Foundation Chat/fmx/Sources/fmx/Commands/SchemaCommand.swift" : {
+    "index-unit-output-path" : "/fmx.build/Release/fmx-p.build/Objects-normal/arm64/SchemaCommand.o",
+    "llvm-bc" : "/Users/jmariwyatt/Desktop/VSCode/Cursor Apps/Foundation Chat/fmx/.build/out/Intermediates.noindex/fmx.build/Release/fmx-p.build/Objects-normal/arm64/SchemaCommand.bc",
+    "object" : "/Users/jmariwyatt/Desktop/VSCode/Cursor Apps/Foundation Chat/fmx/.build/out/Intermediates.noindex/fmx.build/Release/fmx-p.build/Objects-normal/arm64/SchemaCommand.o"
+  },
+  "/Users/jmariwyatt/Desktop/VSCode/Cursor Apps/Foundation Chat/fmx/Sources/fmx/FMX.swift" : {
+    "index-unit-output-path" : "/fmx.build/Release/fmx-p.build/Objects-normal/arm64/FMX.o",
+    "llvm-bc" : "/Users/jmariwyatt/Desktop/VSCode/Cursor Apps/Foundation Chat/fmx/.build/out/Intermediates.noindex/fmx.build/Release/fmx-p.build/Objects-normal/arm64/FMX.bc",
+    "object" : "/Users/jmariwyatt/Desktop/VSCode/Cursor Apps/Foundation Chat/fmx/.build/out/Intermediates.noindex/fmx.build/Release/fmx-p.build/Objects-normal/arm64/FMX.o"
+  },
+  "/Users/jmariwyatt/Desktop/VSCode/Cursor Apps/Foundation Chat/fmx/Sources/fmx/ModelSupport.swift" : {
+    "index-unit-output-path" : "/fmx.build/Release/fmx-p.build/Objects-normal/arm64/ModelSupport.o",
+    "llvm-bc" : "/Users/jmariwyatt/Desktop/VSCode/Cursor Apps/Foundation Chat/fmx/.build/out/Intermediates.noindex/fmx.build/Release/fmx-p.build/Objects-normal/arm64/ModelSupport.bc",
+    "object" : "/Users/jmariwyatt/Desktop/VSCode/Cursor Apps/Foundation Chat/fmx/.build/out/Intermediates.noindex/fmx.build/Release/fmx-p.build/Objects-normal/arm64/ModelSupport.o"
+  }
+}

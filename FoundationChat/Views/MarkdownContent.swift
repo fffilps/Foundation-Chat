@@ -208,7 +208,7 @@ enum MarkdownRenderer {
                 }
                 let code = codeLines.joined(separator: "\n")
                 let lang = language.isEmpty ? nil : language
-                if MarkdownNormalizer.isMarkdownLanguage(lang) {
+                if MarkdownNormalizer.shouldRenderFencedMarkdown(language: lang, code: code) {
                     // Nested markdown demo fence — render contents, don't show as code.
                     blocks.append(contentsOf: parseBlocks(code))
                 } else {
@@ -382,31 +382,102 @@ enum MarkdownNormalizer {
         var index = 0
 
         while index < lines.count {
-            let trimmed = lines[index].trimmingCharacters(in: .whitespaces)
-            if trimmed.hasPrefix("```"),
-               isMarkdownLanguage(String(trimmed.dropFirst(3)).trimmingCharacters(in: .whitespacesAndNewlines)) {
+            let openLine = lines[index]
+            let trimmed = openLine.trimmingCharacters(in: .whitespaces)
+            guard trimmed.hasPrefix("```") else {
+                result.append(openLine)
                 index += 1
-                while index < lines.count {
-                    let inner = lines[index]
-                    if inner.trimmingCharacters(in: .whitespaces).hasPrefix("```") {
-                        index += 1
-                        break
-                    }
-                    result.append(inner)
-                    index += 1
-                }
                 continue
             }
-            result.append(lines[index])
+
+            let language = String(trimmed.dropFirst(3))
+                .trimmingCharacters(in: .whitespacesAndNewlines)
+            let lang = language.isEmpty ? nil : language
+            let openIndex = index
             index += 1
+
+            var codeLines: [String] = []
+            var closed = false
+            while index < lines.count {
+                let inner = lines[index]
+                if inner.trimmingCharacters(in: .whitespaces).hasPrefix("```") {
+                    index += 1
+                    closed = true
+                    break
+                }
+                codeLines.append(inner)
+                index += 1
+            }
+
+            let code = codeLines.joined(separator: "\n")
+            if shouldRenderFencedMarkdown(language: lang, code: code) {
+                result.append(contentsOf: codeLines)
+            } else {
+                // Keep real code fences intact (including an unclosed streaming fence).
+                result.append(openLine)
+                result.append(contentsOf: codeLines)
+                if closed {
+                    let closeIndex = openIndex + 1 + codeLines.count
+                    if closeIndex < lines.count {
+                        result.append(lines[closeIndex])
+                    }
+                }
+            }
         }
 
         return result.joined(separator: "\n")
     }
 
+    /// True for `markdown` / `md` / `gfm` (and info strings like `markdown title=…`),
+    /// or bare fences whose body is clearly Markdown demo content (not source code).
+    static func shouldRenderFencedMarkdown(language: String?, code: String) -> Bool {
+        if isMarkdownLanguage(language) { return true }
+        // Bare ``` … ``` demos — only unwrap when the body looks like Markdown, not code.
+        if language == nil || language?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty == true {
+            return looksLikeMarkdownDemo(code)
+        }
+        return false
+    }
+
     static func isMarkdownLanguage(_ language: String?) -> Bool {
         guard let language else { return false }
-        let lower = language.lowercased()
-        return lower == "markdown" || lower == "md" || lower == "gfm"
+        let firstToken = language
+            .lowercased()
+            .split(whereSeparator: { $0.isWhitespace || $0 == "," })
+            .first
+            .map(String.init) ?? ""
+        return firstToken == "markdown" || firstToken == "md" || firstToken == "gfm"
+    }
+
+    /// Heuristic for unlabeled fences that are Markdown samples, not programming code.
+    static func looksLikeMarkdownDemo(_ code: String) -> Bool {
+        let lines = code
+            .split(separator: "\n", omittingEmptySubsequences: false)
+            .map { $0.trimmingCharacters(in: .whitespaces) }
+            .filter { !$0.isEmpty }
+        guard lines.count >= 2 else { return false }
+
+        var markers = 0
+        for line in lines {
+            if line.hasPrefix("#")
+                || line.hasPrefix(">")
+                || line.hasPrefix("- ")
+                || line.hasPrefix("* ")
+                || line.hasPrefix("+ ")
+                || line.hasPrefix("![")
+                || (line.hasPrefix("[") && line.contains("](")) {
+                markers += 1
+                continue
+            }
+            // numbered list "1. "
+            if let dot = line.firstIndex(of: "."),
+               line[line.startIndex..<dot].allSatisfy(\.isNumber),
+               line[dot...].hasPrefix(". ") {
+                markers += 1
+            }
+        }
+
+        // Require a solid Markdown signal so Swift/Python fences stay as code.
+        return markers >= 2 && markers * 3 >= lines.count
     }
 }

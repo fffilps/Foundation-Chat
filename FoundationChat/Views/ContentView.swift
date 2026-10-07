@@ -478,11 +478,11 @@ struct AvailabilityBanner: View {
             return "clock.badge.questionmark"
         }
         switch store.availability {
-        case .appleIntelligenceNotEnabled: "switch.2"
-        case .modelNotReady: "arrow.down.circle"
-        case .deviceNotEligible: "laptopcomputer.trianglebadge.exclamationmark"
-        case .providerComingSoon: "clock.badge.questionmark"
-        default: "exclamationmark.triangle"
+        case .appleIntelligenceNotEnabled: return "switch.2"
+        case .modelNotReady: return "arrow.down.circle"
+        case .deviceNotEligible: return "laptopcomputer.trianglebadge.exclamationmark"
+        case .providerComingSoon: return "clock.badge.questionmark"
+        default: return "exclamationmark.triangle"
         }
     }
 }

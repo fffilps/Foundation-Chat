@@ -2,6 +2,14 @@
 
 A native macOS chat app for **local models**, starting with Apple’s on-device **Foundation Models** — the same engine behind the `fm` CLI, with a real Mac GUI.
 
+## Download
+
+**[Latest release (1.0.1)](https://github.com/fffilps/Foundation-Chat/releases/latest)** — grab the macOS `.zip`, unzip, open `FoundationChat.app`.
+
+Requirements: macOS 26+, Apple Silicon, Apple Intelligence enabled, on-device model downloaded.
+
+If macOS blocks the app (before notarization or on first open): right-click the app → **Open** → **Open**.
+
 ## Features
 
 - Streaming on-device chat (same `SystemLanguageModel` as `fm`)

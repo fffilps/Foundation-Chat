@@ -13,6 +13,11 @@
 		A10000000000000000000004 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000004 /* ContentView.swift */; };
 		A10000000000000000000005 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000005 /* Assets.xcassets */; };
 		A10000000000000000000006 /* SheetsAndHelp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000008 /* SheetsAndHelp.swift */; };
+		A10000000000000000000007 /* MarkdownCodeParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000009 /* MarkdownCodeParser.swift */; };
+		A10000000000000000000008 /* CodePreviewViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000000000000000000000A /* CodePreviewViews.swift */; };
+		A10000000000000000000009 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2000000000000000000000B /* WebKit.framework */; };
+		A1000000000000000000000A /* ReactPreviewBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000000000000000000000C /* ReactPreviewBuilder.swift */; };
+		A1000000000000000000000B /* SwiftUIPreviewRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000000000000000000000D /* SwiftUIPreviewRenderer.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +29,11 @@
 		A20000000000000000000006 /* FoundationChat.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = FoundationChat.entitlements; sourceTree = "<group>"; };
 		A20000000000000000000007 /* FoundationChat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FoundationChat.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A20000000000000000000008 /* SheetsAndHelp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SheetsAndHelp.swift; sourceTree = "<group>"; };
+		A20000000000000000000009 /* MarkdownCodeParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkdownCodeParser.swift; sourceTree = "<group>"; };
+		A2000000000000000000000A /* CodePreviewViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodePreviewViews.swift; sourceTree = "<group>"; };
+		A2000000000000000000000B /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
+		A2000000000000000000000C /* ReactPreviewBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReactPreviewBuilder.swift; sourceTree = "<group>"; };
+		A2000000000000000000000D /* SwiftUIPreviewRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIPreviewRenderer.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -31,6 +41,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A10000000000000000000009 /* WebKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -42,6 +53,7 @@
 			children = (
 				A40000000000000000000002 /* FoundationChat */,
 				A40000000000000000000005 /* Products */,
+				A40000000000000000000007 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -51,6 +63,7 @@
 				A20000000000000000000001 /* FoundationChatApp.swift */,
 				A20000000000000000000002 /* ChatStore.swift */,
 				A40000000000000000000003 /* Models */,
+				A40000000000000000000006 /* Utilities */,
 				A40000000000000000000004 /* Views */,
 				A20000000000000000000005 /* Assets.xcassets */,
 				A20000000000000000000006 /* FoundationChat.entitlements */,
@@ -71,8 +84,27 @@
 			children = (
 				A20000000000000000000004 /* ContentView.swift */,
 				A20000000000000000000008 /* SheetsAndHelp.swift */,
+				A2000000000000000000000A /* CodePreviewViews.swift */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		A40000000000000000000006 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				A20000000000000000000009 /* MarkdownCodeParser.swift */,
+				A2000000000000000000000C /* ReactPreviewBuilder.swift */,
+				A2000000000000000000000D /* SwiftUIPreviewRenderer.swift */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
+		A40000000000000000000007 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				A2000000000000000000000B /* WebKit.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		A40000000000000000000005 /* Products */ = {
@@ -157,6 +189,10 @@
 				A10000000000000000000003 /* ChatModels.swift in Sources */,
 				A10000000000000000000004 /* ContentView.swift in Sources */,
 				A10000000000000000000006 /* SheetsAndHelp.swift in Sources */,
+				A10000000000000000000007 /* MarkdownCodeParser.swift in Sources */,
+				A10000000000000000000008 /* CodePreviewViews.swift in Sources */,
+				A1000000000000000000000A /* ReactPreviewBuilder.swift in Sources */,
+				A1000000000000000000000B /* SwiftUIPreviewRenderer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

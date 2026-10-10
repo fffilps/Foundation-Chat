@@ -281,6 +281,7 @@ struct MessageListView: View {
 struct MessageBubble: View {
     @EnvironmentObject private var store: ChatStore
     let message: ChatMessage
+    @State private var previewPayload: CodePreviewPayload?
 
     private var isUser: Bool { message.role == .user }
 
@@ -306,19 +307,32 @@ struct MessageBubble: View {
                     }
                 }
 
-                Text(message.text.isEmpty && message.isStreaming ? "Thinking…" : message.text)
-                    .font(.body)
-                    .textSelection(.enabled)
-                    .padding(.horizontal, 14)
-                    .padding(.vertical, 10)
-                    .background(
-                        RoundedRectangle(cornerRadius: 14, style: .continuous)
-                            .fill(isUser ? Color.accentColor.opacity(0.18) : Color(nsColor: .controlBackgroundColor))
-                    )
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 14, style: .continuous)
-                            .strokeBorder(Color.primary.opacity(0.06), lineWidth: 1)
-                    )
+                Group {
+                    if message.text.isEmpty && message.isStreaming {
+                        Text("Thinking…")
+                            .font(.body)
+                    } else if isUser {
+                        Text(message.text)
+                            .font(.body)
+                            .textSelection(.enabled)
+                    } else {
+                        MessageBodyView(
+                            text: message.text,
+                            isStreaming: message.isStreaming,
+                            onPreview: { previewPayload = $0 }
+                        )
+                    }
+                }
+                .padding(.horizontal, 14)
+                .padding(.vertical, 10)
+                .background(
+                    RoundedRectangle(cornerRadius: 14, style: .continuous)
+                        .fill(isUser ? Color.accentColor.opacity(0.18) : Color(nsColor: .controlBackgroundColor))
+                )
+                .overlay(
+                    RoundedRectangle(cornerRadius: 14, style: .continuous)
+                        .strokeBorder(Color.primary.opacity(0.06), lineWidth: 1)
+                )
 
                 if message.isStreaming {
                     ProgressView()
@@ -328,6 +342,9 @@ struct MessageBubble: View {
             .frame(maxWidth: 640, alignment: isUser ? .trailing : .leading)
 
             if !isUser { Spacer(minLength: 80) }
+        }
+        .sheet(item: $previewPayload) { payload in
+            CodePreviewSheet(payload: payload)
         }
     }
 }

@@ -101,6 +101,7 @@ enum PromptSuggestion: Identifiable, Sendable {
     case explain
     case brainstorm
     case codeReview
+    case buildUI
     case outline
 
     var id: String { title }
@@ -112,6 +113,7 @@ enum PromptSuggestion: Identifiable, Sendable {
         case .explain: "Explain simply"
         case .brainstorm: "Brainstorm"
         case .codeReview: "Review code"
+        case .buildUI: "Build a UI"
         case .outline: "Make an outline"
         }
     }
@@ -128,13 +130,19 @@ enum PromptSuggestion: Identifiable, Sendable {
             "Brainstorm 8 useful ideas for:"
         case .codeReview:
             "Review this code for bugs, clarity, and simpler alternatives:"
+        case .buildUI:
+            """
+            Build a small, self-contained UI for this idea that I can preview in the app. \
+            Prefer one of: fenced ```html```/```css```/```javascript```, ```jsx```/```tsx``` React, or ```swift``` SwiftUI. \
+            Keep it polished and minimal:
+            """
         case .outline:
             "Create a clean outline for:"
         }
     }
 
     static let all: [PromptSuggestion] = [
-        .summarize, .rewrite, .explain, .brainstorm, .codeReview, .outline
+        .summarize, .rewrite, .explain, .brainstorm, .codeReview, .buildUI, .outline
     ]
 }
 
@@ -201,7 +209,10 @@ struct ChatConversation: Identifiable, Codable, Sendable, Equatable {
             subtitle: "Practical engineering help",
             instructions: """
             You are a senior software engineer. Focus on correct, idiomatic code. \
-            Explain briefly, then provide code. Call out edge cases and tradeoffs.
+            Explain briefly, then provide code in fenced markdown blocks with a language tag \
+            (for example ```swift, ```jsx, or ```html). When the user asks for UI, pages, or visual \
+            components, prefer self-contained HTML/CSS/JS, React (jsx/tsx), or SwiftUI so they can \
+            preview the result in the app and request changes from what they see. Call out edge cases and tradeoffs.
             """
         ),
         InstructionPreset(
@@ -346,7 +357,8 @@ enum HelpTopic: String, CaseIterable, Identifiable {
             """
             Foundation Chat is a Mac GUI for Apple’s on-device Foundation Models — the same SystemLanguageModel used by the `fm` CLI.
 
-            Use it to chat, rewrite, summarize, brainstorm, and get coding help without leaving a normal Mac app.
+            Use it to chat, rewrite, summarize, brainstorm, and get coding help without leaving a normal Mac app. \
+            When replies include HTML/CSS/JS, React (jsx/tsx), or SwiftUI, you can open Preview to see the result and steer changes visually.
             """
         case .context:
             """
@@ -374,6 +386,7 @@ enum HelpTopic: String, CaseIterable, Identifiable {
             """
             • Be specific: paste the text you want changed
             • Use presets for coding, writing, or concise mode
+            • For UI work, ask for HTML, React (jsx/tsx), or SwiftUI and tap Preview on the reply
             • Copy any reply from the message menu
             • Export a chat when you want a Markdown transcript
             • If answers drift, start a new chat with fresh context
